@@ -1,0 +1,65 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <openssl/sha.h>
+
+struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+};
+
+typedef struct Node Node;
+typedef unsigned char int8;
+
+// Function declarations
+Node* createNode(int);
+int search(Node*, int);
+void hashFunction(int);
+
+int main() {
+    Node* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->left = createNode(4);
+    root->left->right = createNode(5);
+    root->right->left = createNode(6);
+    root->right->right = createNode(7);
+
+    int value = 4;  
+    search(root, value);  
+
+    return 0;
+}
+
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+int search(Node* root, int value) {
+    if (root == NULL)
+        return 0;
+    if (root->data == value) {
+        printf("Value %d found.\n", value);
+        hashFunction(value);
+        return 1;
+    }
+    return search(root->left, value) || search(root->right, value);
+}
+
+void hashFunction(int value) {
+    int8 hash[32];
+    int8 input[20];
+    sprintf(input, "%d", value);  
+
+    SHA256((int8*)input, strlen(input), hash);
+
+    printf("SHA-256 hash: ");
+    for (int i = 0; i < 32; i++)
+        printf("%02x", hash[i]);
+    printf("\n");
+}
