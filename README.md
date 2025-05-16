@@ -6,12 +6,4 @@ Merkle Tree
                       
 -hash function - sha2---> want to use post-quantum hash function SPINCS+. Hope to succeed
 -combine hashes -not started --> staring from the bottom of the tree-> apply hash function for each individual leaf, and as we move to an upper layer, group them into a pair of 2 and apply hash func, up to the root--> root hash
--for the time being I have created the tree that looks like that:
-                                            1
-                                        /      \
-                                      /          \
-                                    2              3
-                                  /  \           /   \
-                                /     \         /     \
-                               4       5       6        7
                                
