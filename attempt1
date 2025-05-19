@@ -14,8 +14,9 @@ typedef unsigned char int8;
 
 // Function declarations
 Node* createNode(int);
-int search(Node*, int);
-void hashFunction(int);
+//int search(Node*, int);
+void BFS(Node*, char*);
+void hashFunction(char*);
 
 int main() {
     Node* root = createNode(1);
@@ -25,9 +26,23 @@ int main() {
     root->left->right = createNode(5);
     root->right->left = createNode(6);
     root->right->right = createNode(7);
+    
+    char output[1000];  // big enough buffer
+    BFS(root, output);
 
-    int value = 4;  
-    search(root, value);  
+    printf("Level order: %s\n", output);
+
+    // Extract groups using strchr
+    char* start = output;
+    while ((start = strchr(start, '[')) != NULL) {
+        char* end = strchr(start, ']');
+        if (end == NULL) break;
+
+        *end = '\0';  // null terminate group
+        printf("Group: %s\n", start + 1);
+        hashFunction(start + 1)
+        start = end + 1;
+    }
 
     return 0;
 }
@@ -40,15 +55,41 @@ Node* createNode(int data) {
     return newNode;
 }
 
-int search(Node* root, int value) {
-    if (root == NULL)
-        return 0;
-    if (root->data == value) {
-        printf("Value %d found.\n", value);
-        hashFunction(value);
-        return 1;
+//int search(Node* root, int value) {
+//    if (root == NULL)
+//        return 0;
+//    if (root->data == value) {
+//        printf("Value %d found.\n", value);
+//        hashFunction(value);
+//        return 1;
+//    }
+//    return search(root->left, value) || search(root->right, value);
+//
+  
+//level order traversal
+void BFS(struct Node*root)
+{
+  if(root==NULL) return;
+  struct Node*queue[100];
+  int front=0, rear=0;
+  queue[rear++]=root;
+  
+  while(front<rear){
+    int size=rear-front;
+    printf("[");
+    
+    for (int i=0; i<size; i++){
+      struct Node *node=queue[front++];
+      printf("%d", node->data);
+      if(i<size-1)
+        printf(", ");
+      if(node->left)
+        queue[rear++]=node->left;
+      if(node->right)
+        queue[rear++]=node->right;
     }
-    return search(root->left, value) || search(root->right, value);
+    printf("]\n");
+  }
 }
 
 void hashFunction(int value) {
